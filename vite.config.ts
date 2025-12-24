@@ -5,32 +5,27 @@ import path from 'path'
 import { visualizer } from 'rollup-plugin-visualizer'
 import compression from 'vite-plugin-compression'
 
-const isGhPages = process.env.VITE_DEPLOY_TARGET === 'GH_PAGES'
-
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    react({
-      // Optimize for fast refresh and hydration
-      fastRefresh: true,
-    }),
+    react(), // default config is safest for prod
     TanStackRouterVite(),
-    // Compression plugins
+
+    // Brotli compression (Netlify will serve if supported)
     compression({
-      verbose: false,
-      disable: false,
-      threshold: 10240,
       algorithm: 'brotli',
       ext: '.br',
-    }),
-    compression({
-      verbose: false,
-      disable: false,
       threshold: 10240,
+    }),
+
+    // Gzip compression (fallback)
+    compression({
       algorithm: 'gzip',
       ext: '.gz',
+      threshold: 10240,
     }),
-    // Bundle visualization (disabled by default, enable with --analyze flag)
+
+    // Optional bundle analysis: `ANALYZE=true npm run build`
     process.env.ANALYZE
       ? visualizer({
           open: true,
@@ -40,14 +35,25 @@ export default defineConfig({
         })
       : null,
   ].filter(Boolean),
-  base: isGhPages ? '/grwm.dev/' : '/',
+
+  /**
+   * IMPORTANT
+   * ----------
+   * GitHub Pages USER SITE + Netlify both require root base.
+   * Repo name: flexdevguy.github.io
+   * URL: https://flexdevguy.github.io/
+   */
+  base: '/',
+
   build: {
     outDir: 'dist',
     copyPublicDir: true,
     target: 'esnext',
     minify: 'terser',
     sourcemap: false,
+    reportCompressedSize: true,
   },
+
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
@@ -55,6 +61,11 @@ export default defineConfig({
       '@shared': path.resolve(__dirname, './src/shared'),
     },
   },
+
+  /**
+   * optimizeDeps affects DEV only.
+   * Safe to keep, but do not over-tune.
+   */
   optimizeDeps: {
     include: [
       'react',
@@ -65,21 +76,14 @@ export default defineConfig({
       'react-ga4',
       'underscore',
     ],
-    // Pre-bundle for faster dev server
     esbuildOptions: {
       target: 'esnext',
     },
-    // Inline to avoid extra request in dev
-    holdVendorChunkNames: true,
   },
-  // Optimize for development
+
   server: {
     hmr: {
       overlay: true,
-    },
-    // Enable warm up for frequently accessed modules
-    warmup: {
-      clientFiles: ['./src/main.tsx', './src/router.tsx', './src/App.tsx'],
     },
   },
 })
