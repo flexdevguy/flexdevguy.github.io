@@ -1,16 +1,25 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { TanStackRouterVite } from '@tanstack/router-vite-plugin'
+import { VitePWA } from 'vite-plugin-pwa'
 import path from 'path'
-import { visualizer } from 'rollup-plugin-visualizer'
 import compression from 'vite-plugin-compression'
+import { visualizer } from 'rollup-plugin-visualizer'
 
-// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
-    react(), // default config is safest for prod
-    TanStackRouterVite(),
+    /**
+   * IMPORTANT
+   * ----------
+   * GitHub Pages USER SITE + Netlify both require root base.
+   * Repo name: flexdevguy.github.io
+   * URL: https://flexdevguy.github.io/
+   */
+  base: '/',
 
+  plugins: [
+    react(),
+    TanStackRouterVite(),
+    
     // Brotli compression (Netlify will serve if supported)
     compression({
       algorithm: 'brotli',
@@ -25,7 +34,72 @@ export default defineConfig({
       threshold: 10240,
     }),
 
-    // Optional bundle analysis: `ANALYZE=true npm run build`
+    // PWA (SAFE)
+    VitePWA({
+      registerType: 'autoUpdate',
+      includeAssets: ['favicon.ico', 'robots.txt'],
+      manifest: {
+        name: 'GRWM',
+        short_name: 'GRWM',
+        description: 'Grow With Me',
+        theme_color: '#0f172a',
+        background_color: '#0f172a',
+        display: 'standalone',
+        start_url: '/',
+        icons: [
+          {
+            src: '/icons/icon-192.png',
+            sizes: '192x192',
+            type: 'image/png',
+          },
+          {
+            src: '/icons/icon-512.png',
+            sizes: '512x512',
+            type: 'image/png',
+          },
+          {
+            src: '/icons/icon-512-maskable.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'maskable',
+          },
+        ],
+      },
+      workbox: {
+        cleanupOutdatedCaches: true,
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,webp}'],
+        navigateFallback: '/offline.html',
+        navigateFallbackDenylist: [/^\/assets\//],
+        runtimeCaching: [
+          {
+            urlPattern: ({ request }) => request.destination === 'image',
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'images',
+              expiration: {
+                maxEntries: 60,
+                maxAgeSeconds: 60 * 60 * 24 * 30,
+              },
+            },
+          },
+          {
+            urlPattern: ({ request }) =>
+              request.destination === 'script' ||
+              request.destination === 'style',
+            handler: 'StaleWhileRevalidate',
+            options: {
+              cacheName: 'assets',
+            },
+          },
+        ],
+      },
+    }),
+
+    // Compression (safe)
+    compression({ algorithm: 'brotli', ext: '.br' }),
+    compression({ algorithm: 'gzip', ext: '.gz' }),
+
+    // Bundle analysis (optional)
     process.env.ANALYZE
       ? visualizer({
           open: true,
@@ -35,15 +109,6 @@ export default defineConfig({
         })
       : null,
   ].filter(Boolean),
-
-  /**
-   * IMPORTANT
-   * ----------
-   * GitHub Pages USER SITE + Netlify both require root base.
-   * Repo name: flexdevguy.github.io
-   * URL: https://flexdevguy.github.io/
-   */
-  base: '/',
 
   build: {
     outDir: 'dist',
