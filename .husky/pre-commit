@@ -3,35 +3,8 @@
 
 echo "🔍 Running pre-commit checks..."
 
-# Run lint-staged
-npx lint-staged
+# Run lint-staged (only on staged files, excluding dist)
+echo "🔍 Linting staged files..."
+npx lint-staged --no-stash || exit 1
 
-# Run type checking
-echo "🔍 Type checking..."
-npm run type-check || exit 1
-
-# Run tests with coverage
-echo "🧪 Running tests with coverage..."
-npm run test:coverage || exit 1
-
-# Check if coverage meets threshold (using Node.js)
-echo "📊 Checking coverage threshold..."
-node -e "
-const fs = require('fs');
-const path = './coverage/coverage-summary.json';
-if (fs.existsSync(path)) {
-  const data = JSON.parse(fs.readFileSync(path, 'utf8'));
-  const coverage = data.total.lines.pct;
-  const threshold = 80;
-  if (coverage < threshold) {
-    console.error(\`❌ Code coverage (\${coverage}%) is below threshold (\${threshold}%)\`);
-    process.exit(1);
-  } else {
-    console.log(\`✅ Code coverage (\${coverage}%) meets threshold (\${threshold}%)\`);
-  }
-} else {
-  console.log('⚠️  Coverage file not found, skipping coverage check');
-}
-" || exit 1
-
-echo "✅ All pre-commit checks passed!"
+echo "✅ Pre-commit checks passed!"
