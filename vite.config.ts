@@ -1,9 +1,9 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import { TanStackRouterVite } from '@tanstack/router-vite-plugin';
-import path from 'path';
-import { visualizer } from 'rollup-plugin-visualizer';
-import compression from 'vite-plugin-compression';
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import { TanStackRouterVite } from '@tanstack/router-vite-plugin'
+import path from 'path'
+import { visualizer } from 'rollup-plugin-visualizer'
+import compression from 'vite-plugin-compression'
 
 const isGhPages = process.env.VITE_DEPLOY_TARGET === 'GH_PAGES'
 
@@ -43,63 +43,10 @@ export default defineConfig({
   base: isGhPages ? '/grwm.dev/' : '/',
   build: {
     outDir: 'dist',
-    // Copy public assets including robots.txt and sitemap.xml
     copyPublicDir: true,
-    // Optimize for Core Web Vitals
     target: 'esnext',
     minify: 'terser',
-    minifyIdentifiers: true,
-    cssMinify: true,
-    // Report gzip size for better insights
-    reportCompressedSize: true,
-    // Sourcemap for production debugging (set to false for production)
     sourcemap: false,
-    // Rollup options for advanced chunk management
-    rollupOptions: {
-      output: {
-        manualChunks: (id) => {
-          // Vendor chunks for better caching
-          if (id.includes('node_modules')) {
-            if (id.includes('react') || id.includes('react-dom')) {
-              return 'react-vendor';
-            }
-            if (id.includes('@tanstack/react-router')) {
-              return 'router-vendor';
-            }
-            if (id.includes('framer-motion')) {
-              return 'animation-vendor';
-            }
-            if (id.includes('react-helmet-async')) {
-              return 'seo-vendor';
-            }
-            if (id.includes('react-ga4') || id.includes('react-grab')) {
-              return 'external-vendor';
-            }
-            if (id.includes('underscore')) {
-              return 'utils-vendor';
-            }
-            return 'vendor';
-          }
-        },
-        // Optimize chunk names for better caching
-        chunkFileNames: 'assets/js/[name]-[hash].js',
-        entryFileNames: 'assets/js/[name]-[hash].js',
-        assetFileNames: 'assets/[ext]/[name]-[hash].[ext]',
-      },
-    },
-    chunkSizeWarningLimit: 1000,
-    // Terser options for aggressive minification
-    terserOptions: {
-      compress: {
-        drop_console: true,
-        drop_debugger: true,
-        passes: 2,
-      },
-      mangle: true,
-      format: {
-        comments: false,
-      },
-    },
   },
   resolve: {
     alias: {
@@ -135,4 +82,4 @@ export default defineConfig({
       clientFiles: ['./src/main.tsx', './src/router.tsx', './src/App.tsx'],
     },
   },
-});
+})
