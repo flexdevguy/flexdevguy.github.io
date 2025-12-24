@@ -38,9 +38,7 @@ export default defineConfig({
         })
       : null,
   ].filter(Boolean),
-  base: process.env.DEPLOY_ENV === 'GH_PAGES'
-    ? '/flexdevguy/'
-    : '/',
+  base: '/',
   build: {
     outDir: 'dist',
     // Copy public assets including robots.txt and sitemap.xml
