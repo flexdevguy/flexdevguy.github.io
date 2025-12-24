@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "deploy:gh": "gh-pages -d dist --nojekyll",
+    "deploy:gh": "gh-pages -d dist -b gh-pages -r https://github.com/flexdevguy/flexdevguy.github.io.git --nojekyll",
     "deploy:gh:full": "rimraf dist && npm run build && npm run deploy:gh",
     "build:analyze": "ANALYZE=true vite build",
     "test": "vitest",
