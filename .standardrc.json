@@ -1,0 +1,19 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
+  "env": {
+    "browser": true,
+    "es2020": true,
+    "node": true
+  },
+  "ignore": [
+    "node_modules/**",
+    "dist/**",
+    "build/**",
+    "*.config.js",
+    "*.config.ts",
+    "coverage/**",
+    ".vite/**"
+  ]
+}
+
