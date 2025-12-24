@@ -27,15 +27,6 @@ export const Footer = (): JSX.Element => {
   return (
     <footer className='py-12 px-4 sm:px-6 lg:px-8 bg-gray-900 text-gray-400'>
       <div className='max-w-4xl mx-auto'>
-        {/* Clarity Call Button */}
-        <div className='mb-8 flex justify-center'>
-          <Button
-            href={CALENDLY_URL}
-            label='👉 Book a Free Clarity Call'
-            variant='primary'
-          />
-        </div>
-
         {/* Social Links */}
         <div className='mb-8'>
           <div className='flex justify-center gap-8 mb-8'>
