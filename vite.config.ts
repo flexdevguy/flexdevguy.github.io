@@ -38,7 +38,7 @@ export default defineConfig({
         })
       : null,
   ].filter(Boolean),
-  base: '/',
+   base: '/grwm.dev/',
   build: {
     outDir: 'dist',
     // Copy public assets including robots.txt and sitemap.xml
