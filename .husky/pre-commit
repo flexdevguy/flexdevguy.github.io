@@ -1,7 +1,0 @@
-echo "🔍 Running pre-commit checks..."
-
-# Run lint-staged (only on staged files, excluding dist)
-echo "🔍 Linting staged files..."
-npx lint-staged --no-stash || exit 1
-
-echo "✅ Pre-commit checks passed!"

@@ -29,9 +29,9 @@ export const Footer = (): JSX.Element => {
       <div className='max-w-4xl mx-auto'>
         {/* Clarity Call Button */}
         <div className='mb-8 flex justify-center'>
-          <Button 
-            href={CALENDLY_URL} 
-            label='👉 Book a Free Clarity Call' 
+          <Button
+            href={CALENDLY_URL}
+            label='👉 Book a Free Clarity Call'
             variant='primary'
           />
         </div>

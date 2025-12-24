@@ -68,9 +68,9 @@ describe('Button', () => {
   it('should track GA event on button click', () => {
     render(<Button href='/test' label='Tracked Button' />)
     const button = screen.getByRole('link', { name: 'Tracked Button' })
-    
+
     button.click()
-    
+
     expect(gaModule.trackGAEvent).toHaveBeenCalledWith(
       'engagement',
       'cta_button_click',
@@ -83,9 +83,9 @@ describe('Button', () => {
     const ctaLabel = '👉 Book a 1:1 Call'
     render(<Button href='https://topmate.io' label={ctaLabel} variant='topmate' />)
     const button = screen.getByRole('link', { name: ctaLabel })
-    
+
     button.click()
-    
+
     expect(gaModule.trackGAEvent).toHaveBeenCalledWith(
       'engagement',
       'cta_button_click',

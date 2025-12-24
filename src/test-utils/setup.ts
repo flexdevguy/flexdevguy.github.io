@@ -8,13 +8,14 @@ declare global {
 }
 
 globalThis.IntersectionObserver = class IntersectionObserver {
-  constructor() {}
-  disconnect() {}
-  observe() {}
-  takeRecords() {
+  constructor () {}
+  disconnect () {}
+  observe () {}
+  takeRecords () {
     return []
   }
-  unobserve() {}
+
+  unobserve () {}
 } as any
 
 // Cleanup after each test

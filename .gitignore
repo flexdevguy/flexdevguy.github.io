@@ -31,3 +31,11 @@ src/routeTree.gen.ts
 # Husky
 .husky/_/
 
+
+# Build output
+dist
+build
+
+# Environment variables
+.env*
+!.env.example
