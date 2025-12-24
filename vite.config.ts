@@ -5,6 +5,8 @@ import path from 'path';
 import { visualizer } from 'rollup-plugin-visualizer';
 import compression from 'vite-plugin-compression';
 
+const isGhPages = process.env.VITE_DEPLOY_TARGET === 'GH_PAGES'
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
@@ -38,7 +40,7 @@ export default defineConfig({
         })
       : null,
   ].filter(Boolean),
-   base: '/grwm.dev/',
+  base: isGhPages ? '/grwm.dev/' : '/',
   build: {
     outDir: 'dist',
     // Copy public assets including robots.txt and sitemap.xml

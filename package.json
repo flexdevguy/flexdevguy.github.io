@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "deploy:gh": "gh-pages -d dist",
+    "build:gh": "vite build --mode gh-pages",
+    "deploy:gh": "gh-pages -d dist --nojekyll",
     "build:analyze": "ANALYZE=true vite build",
     "preview": "vite preview",
     "test": "vitest",
