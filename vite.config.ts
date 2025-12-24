@@ -2,6 +2,8 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { TanStackRouterVite } from '@tanstack/router-vite-plugin';
 import path from 'path';
+import { visualizer } from 'rollup-plugin-visualizer';
+import compression from 'vite-plugin-compression';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -11,7 +13,31 @@ export default defineConfig({
       fastRefresh: true,
     }),
     TanStackRouterVite(),
-  ],
+    // Compression plugins
+    compression({
+      verbose: false,
+      disable: false,
+      threshold: 10240,
+      algorithm: 'brotli',
+      ext: '.br',
+    }),
+    compression({
+      verbose: false,
+      disable: false,
+      threshold: 10240,
+      algorithm: 'gzip',
+      ext: '.gz',
+    }),
+    // Bundle visualization (disabled by default, enable with --analyze flag)
+    process.env.ANALYZE
+      ? visualizer({
+          open: true,
+          gzipSize: true,
+          brotliSize: true,
+          filename: 'dist/stats.html',
+        })
+      : null,
+  ].filter(Boolean),
   base: '/',
   build: {
     outDir: 'dist',
@@ -19,8 +45,14 @@ export default defineConfig({
     copyPublicDir: true,
     // Optimize for Core Web Vitals
     target: 'esnext',
-    minify: 'esbuild',
+    minify: 'terser',
+    minifyIdentifiers: true,
     cssMinify: true,
+    // Report gzip size for better insights
+    reportCompressedSize: true,
+    // Sourcemap for production debugging (set to false for production)
+    sourcemap: false,
+    // Rollup options for advanced chunk management
     rollupOptions: {
       output: {
         manualChunks: (id) => {
@@ -32,14 +64,14 @@ export default defineConfig({
             if (id.includes('@tanstack/react-router')) {
               return 'router-vendor';
             }
-            if (id.includes('@tanstack/react-query')) {
-              return 'query-vendor';
-            }
             if (id.includes('framer-motion')) {
               return 'animation-vendor';
             }
-            if (id.includes('zustand')) {
-              return 'state-vendor';
+            if (id.includes('react-helmet-async')) {
+              return 'seo-vendor';
+            }
+            if (id.includes('react-ga4') || id.includes('react-grab')) {
+              return 'external-vendor';
             }
             if (id.includes('underscore')) {
               return 'utils-vendor';
@@ -54,8 +86,18 @@ export default defineConfig({
       },
     },
     chunkSizeWarningLimit: 1000,
-    // Optimize for faster TTI
-    reportCompressedSize: false,
+    // Terser options for aggressive minification
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+        passes: 2,
+      },
+      mangle: true,
+      format: {
+        comments: false,
+      },
+    },
   },
   resolve: {
     alias: {
@@ -69,17 +111,26 @@ export default defineConfig({
       'react',
       'react-dom',
       '@tanstack/react-router',
-      '@tanstack/react-query',
+      'framer-motion',
+      'react-helmet-async',
+      'react-ga4',
+      'underscore',
     ],
     // Pre-bundle for faster dev server
     esbuildOptions: {
       target: 'esnext',
     },
+    // Inline to avoid extra request in dev
+    holdVendorChunkNames: true,
   },
   // Optimize for development
   server: {
     hmr: {
       overlay: true,
+    },
+    // Enable warm up for frequently accessed modules
+    warmup: {
+      clientFiles: ['./src/main.tsx', './src/router.tsx', './src/App.tsx'],
     },
   },
 });

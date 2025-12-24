@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:analyze": "ANALYZE=true vite build",
     "preview": "vite preview",
     "test": "vitest",
     "test:ui": "vitest --ui",
@@ -23,7 +24,8 @@
     "react-ga4": "^2.1.0",
     "react-grab": "^0.0.91",
     "react-helmet-async": "^2.0.4",
-    "underscore": "^1.13.6"
+    "underscore": "^1.13.6",
+    "web-vitals": "^5.1.0"
   },
   "devDependencies": {
     "@tanstack/router-devtools": "^1.20.0",
@@ -49,12 +51,15 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "jsdom": "^23.0.1",
     "postcss": "^8.4.32",
+    "rollup-plugin-visualizer": "^6.0.5",
     "standard": "^17.1.0",
     "tailwindcss": "^3.3.6",
+    "terser": "^5.44.1",
     "ts-standard": "^12.0.2",
     "typescript": "^5.3.3",
     "typescript-eslint": "^7.0.0",
     "vite": "^5.0.8",
+    "vite-plugin-compression": "^0.5.1",
     "vitest": "^1.0.4"
   }
 }

@@ -56,9 +56,16 @@
     <!-- Canonical URL -->
     <link rel="canonical" href="https://grwm.dev/" />
 
-    <!-- Preconnect for performance -->
+    <!-- Preconnect & Font Optimization -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
+    <!-- Preload critical fonts for faster LCP -->
+    <link rel="preload" as="font" type="font/woff2" href="https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHAPMtMadLh0_-8O7DB1-wR-PvY4pM.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHAPMtMadLh5f-8O7DB1-wR-PvY4pM.woff2" crossorigin />
+    
+    <!-- Import Google Fonts for Inter family (400, 500, 600, 700 weights) -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
 
     <!-- DNS prefetch for external resources -->
     <link rel="dns-prefetch" href="https://calendly.com" />
